@@ -57,6 +57,7 @@ public class Decryptor {
         bitPermute.put(0x0E, 0x0B);
         bitPermute.put(0x0F, 0x0F);
 
+        // Print aout some not really needed Information
         System.out.println("+-------------------------------------------------------------------------------------------------------------+");
         System.out.println("|                                   Starting DECRYPTION with                                                  |");
         System.out.println("|                                                                                                             |");
@@ -68,7 +69,7 @@ public class Decryptor {
 
 
         // Create Key Parts
-        doCalcKeys(key);
+        createKeyParts(key);
 
         // Get y-1 from chiffre Text
         this.ym1 = chiffre.substring(0, m * n);
@@ -79,13 +80,13 @@ public class Decryptor {
         // Array for all Y's and the Decrypted Results. Length based on n * m
         int length = chiffre_wo_ym1.length() / (m * n);
 
-        String[] y_array           = new String[length];
+        String[] y_parts           = new String[length];
         String[] decrypted_results = new String[length];
 
 
-        // Cut the Chiffre and put it in the y's array
+        // Cut the Chiffre in pieces of m*n length and put it in the y's array
         for (int i = 0; i < chiffre_wo_ym1.length(); i += (m * n)) {
-            y_array[i / 16] = chiffre_wo_ym1.substring(i, i + (m * n));
+            y_parts[i / 16] = chiffre_wo_ym1.substring(i, i + (m * n));
         }
 
         // Run the SPN and increment y-1 + 1
@@ -103,7 +104,7 @@ public class Decryptor {
         // Collect all results and apply an xor with the element from the y's
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < decrypted_results.length; i++) {
-            result.append(xor(decrypted_results[i], y_array[i]));
+            result.append(xor(decrypted_results[i], y_parts[i]));
 
         }
 
@@ -113,7 +114,7 @@ public class Decryptor {
     }
 
     // Calculate the Keys and stuff them into the keyParts List
-    private void doCalcKeys(String key) {
+    private void createKeyParts(String key) {
         for (int e = 0; e <= key.length() - m * n; e += n) {
             keyParts.add(key.substring(e, (m * n) + e));
         }
