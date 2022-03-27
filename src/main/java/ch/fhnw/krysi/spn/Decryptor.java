@@ -128,7 +128,7 @@ public class Decryptor {
         // First do the WhiteStep
         afterSPN = xor(toSPN, keyParts.get(0));
 
-        // do the normal steps
+        // do the normal steps for keys 1 to number of keys minus 1
         for (int i = 1; i < keyParts.size() - 1; i++) {
             afterSPN = doSBoxStep(afterSPN);
             afterSPN = doBitpermutation(afterSPN);
@@ -146,10 +146,10 @@ public class Decryptor {
     // Do a Bit Permutation based on bitPermute Table
     private String doBitpermutation(String toPermute) {
         StringBuilder result = new StringBuilder("0000000000000000");
-        int           k      = 0;
-        while (k < 16) {
-            result.setCharAt(this.bitPermute.get(k), toPermute.charAt(k));
-            k++;
+        int           i      = 0;
+        while (i < 16) {
+            result.setCharAt(this.bitPermute.get(i), toPermute.charAt(i));
+            i++;
         }
         return result.toString();
     }
